@@ -126,9 +126,10 @@ const Nav = ({ activeRoute, onNavigate }) => {
     <motion.nav 
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="fixed top-6 left-1/2 -translate-x-1/2 z-50"
+      // FIX: Use full-width flex container for perfect centering
+      className="fixed top-6 left-0 right-0 flex justify-center z-50 pointer-events-none"
     >
-      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-full p-2 px-4 shadow-2xl flex items-center gap-2">
+      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-full p-2 px-4 shadow-2xl flex items-center gap-2 pointer-events-auto">
         {links.map((link) => {
           const isActive = activeRoute === link.id;
           return (
@@ -164,19 +165,24 @@ const TimelineItem = ({ year, title, company, description, stack, delay }) => (
     transition={{ delay, duration: 0.5 }}
     className="relative pl-8 pb-12 border-l border-white/10 last:border-0"
   >
-    <div className="absolute left-[-5px] top-0 w-2.5 h-2.5 rounded-full bg-violet-500 shadow-[0_0_10px_rgba(139,92,246,0.8)]" />
-    <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-2">
-      <h3 className="text-xl font-bold text-white">{title}</h3>
-      <span className="text-violet-400 font-mono text-xs">@ {company}</span>
-      <span className="text-gray-500 text-xs font-mono ml-auto">{year}</span>
-    </div>
-    <p className="text-gray-400 text-sm mb-4 leading-relaxed">{description}</p>
-    <div className="flex flex-wrap gap-2">
-      {stack.map((tech) => (
-        <span key={tech} className="px-2 py-1 text-[10px] font-mono bg-white/5 border border-white/10 rounded text-gray-300">
-          {tech}
-        </span>
-      ))}
+    {/* Dot - Adjusted top to align with card content visually */}
+    <div className="absolute left-[-5px] top-8 w-2.5 h-2.5 rounded-full bg-violet-500 shadow-[0_0_10px_rgba(139,92,246,0.8)]" />
+    
+    {/* Card Content Wrapper */}
+    <div className="bg-white/5 border border-white/10 p-6 rounded-xl hover:bg-white/10 transition-colors">
+        <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-3">
+            <h3 className="text-xl font-bold text-white">{title}</h3>
+            <span className="text-violet-400 font-mono text-sm">@ {company}</span>
+            <span className="text-gray-400 text-sm font-mono ml-auto">{year}</span>
+        </div>
+        <p className="text-gray-300 text-base mb-4 leading-relaxed">{description}</p>
+        <div className="flex flex-wrap gap-2">
+            {stack.map((tech) => (
+                <span key={tech} className="px-3 py-1 text-xs font-mono bg-white/5 border border-white/10 rounded text-gray-300">
+                {tech}
+                </span>
+            ))}
+        </div>
     </div>
   </motion.div>
 );
@@ -207,13 +213,13 @@ const ProjectCard = ({ title, desc, tags }) => (
 // --- PAGES ---
 
 const HomePage = ({ onNavigate }) => (
-  <div className="max-w-5xl mx-auto px-6 pt-32 pb-20">
-    {/* Hero */}
+  <div className="max-w-5xl mx-auto px-6 pb-20">
+    {/* Hero - Full viewport height and centered */}
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
-      className="min-h-[60vh] flex flex-col justify-center"
+      className="min-h-screen flex flex-col justify-center"
     >
       <div className="flex items-center gap-3 mb-6">
         <div className="h-px w-10 bg-violet-500/50" />
@@ -223,20 +229,19 @@ const HomePage = ({ onNavigate }) => (
       </div>
       
       <h1 className="text-5xl md:text-7xl font-serif font-medium text-white mb-8 leading-[1.1]">
-        I Build Technical Systems <br />
+        I Build at the Edge of Intelligence, <br />
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-blue-400">
-          That Think.
+          Computation, and the Emerging Internet
         </span>
       </h1>
 
       <p className="text-lg md:text-xl text-gray-400 max-w-2xl leading-relaxed mb-10">
-        I’m <strong className="text-white">Drew Meyer</strong> — an engineer obsessed with AI, agentic tooling, and full-stack systems. 
-        I turn raw data, messy ideas, and brittle workflows into reliable, expressive software.
+        I’m <strong className="text-white">Drew Meyer</strong> - a generalist engineer deeply interested in AI, software and blockchain technologies. This is my slice of the Internet, where I explore how these frontiers converge and shape what's possible in tech.
       </p>
 
       <div className="flex flex-wrap gap-4">
         <button 
-            onClick={() => document.getElementById('work').scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => document.getElementById('journey').scrollIntoView({ behavior: 'smooth' })}
             className="group relative px-8 py-3 bg-white/10 backdrop-blur-md rounded-full font-medium text-white overflow-hidden transition-all hover:shadow-[0_0_20px_rgba(139,92,246,0.3)] border border-white/10 hover:border-violet-500/50"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-violet-600/50 to-blue-600/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -244,17 +249,11 @@ const HomePage = ({ onNavigate }) => (
             View My Work <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
           </span>
         </button>
-        <button 
-            onClick={() => onNavigate('blog')}
-            className="px-8 py-3 rounded-full font-medium text-gray-300 border border-white/10 hover:bg-white/5 transition-colors"
-        >
-          Read the Blog
-        </button>
       </div>
     </motion.div>
 
     {/* Timeline */}
-    <div id="work" className="py-20 grid md:grid-cols-12 gap-12">
+    <div id="journey" className="scroll-mt-32 py-32 grid md:grid-cols-12 gap-16 border-t border-white/5">
       <div className="md:col-span-4">
         <div className="sticky top-32">
             <h2 className="text-3xl font-serif text-white mb-4">Journey</h2>
@@ -535,14 +534,14 @@ export default function App() {
     // 2. Fade out content
     setShowContent(false);
 
-    // 3. Switch route after "warp travel" time
+    // 3. Switch route after "warp travel" time (reduced for snappier feel)
     setTimeout(() => {
         setActiveRoute(route);
         // 4. Fade content back in
         setShowContent(true);
-        // 5. Stop warping
-        setTimeout(() => setIsWarping(false), 500);
-    }, 800);
+        // 5. Stop warping (stop sooner so content fades in as warp ends)
+        setTimeout(() => setIsWarping(false), 400); 
+    }, 600); // reduced from 800
   };
 
   return (
