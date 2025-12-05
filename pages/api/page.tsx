@@ -6,20 +6,59 @@ import {
   Clock, ExternalLink, Github, Linkedin, Mail
 } from 'lucide-react';
 
+// --- TYPES ---
+
+interface Star {
+  x: number;
+  y: number;
+  z: number;
+  prevZ: number;
+}
+
+interface StarfieldProps {
+  isWarping: boolean;
+}
+
+interface NavProps {
+  activeRoute: string;
+  onNavigate: (route: string) => void;
+}
+
+interface TimelineItemProps {
+  year: string;
+  title: string;
+  company: string;
+  description: string;
+  stack: string[];
+  delay: number;
+}
+
+interface ProjectCardProps {
+  title: string;
+  desc: string;
+  tags: string[];
+}
+
+interface HomePageProps {
+  onNavigate: (route: string) => void;
+}
+
 // --- NATIVE CANVAS STARFIELD (STABILITY FIX) ---
 
-const Starfield = ({ isWarping }) => {
-  const canvasRef = useRef(null);
+const Starfield = ({ isWarping }: StarfieldProps) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     
     const ctx = canvas.getContext('2d');
-    let animationFrameId;
+    if (!ctx) return;
+    
+    let animationFrameId: number;
     
     // Star properties
-    const stars = [];
+    const stars: Star[] = [];
     const count = 400; // Number of stars
     const depth = 1000; // Depth of field
     
@@ -72,7 +111,7 @@ const Starfield = ({ isWarping }) => {
         // Draw
         if (px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) {
           const size = (1 - star.z / depth) * (isWarping ? 4 : 2.5);
-          const shade = parseInt((1 - star.z / depth) * 255);
+          const shade = Math.floor((1 - star.z / depth) * 255);
           
           ctx.beginPath();
           
@@ -115,7 +154,7 @@ const Starfield = ({ isWarping }) => {
 
 // --- COMPONENTS ---
 
-const Nav = ({ activeRoute, onNavigate }) => {
+const Nav = ({ activeRoute, onNavigate }: NavProps) => {
   const links = [
     { id: 'home', label: 'Home', icon: Terminal },
     { id: 'blog', label: 'Logbook', icon: BookOpen },
@@ -157,7 +196,7 @@ const Nav = ({ activeRoute, onNavigate }) => {
   );
 };
 
-const TimelineItem = ({ year, title, company, description, stack, delay }) => (
+const TimelineItem = ({ year, title, company, description, stack, delay }: TimelineItemProps) => (
   <motion.div
     initial={{ opacity: 0, x: -20 }}
     whileInView={{ opacity: 1, x: 0 }}
@@ -176,8 +215,8 @@ const TimelineItem = ({ year, title, company, description, stack, delay }) => (
         <span className="text-gray-400 text-sm font-mono ml-auto">{year}</span>
       </div>
       <p className="text-gray-300 text-base mb-4 leading-relaxed">{description}</p>
-      <div className="flex flex-wrap gap-2">
-        {stack.map((tech) => (
+        <div className="flex flex-wrap gap-2">
+            {stack.map((tech: string) => (
           <span key={tech} className="px-3 py-1 text-xs font-mono bg-white/5 border border-white/10 rounded text-gray-300">
             {tech}
           </span>
@@ -187,7 +226,7 @@ const TimelineItem = ({ year, title, company, description, stack, delay }) => (
   </motion.div>
 );
 
-const ProjectCard = ({ title, desc, tags }) => (
+const ProjectCard = ({ title, desc, tags }: ProjectCardProps) => (
   <motion.div 
     whileHover={{ y: -5 }}
     className="group relative p-6 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden hover:border-violet-500/50 transition-colors"
@@ -199,8 +238,8 @@ const ProjectCard = ({ title, desc, tags }) => (
         <ExternalLink size={16} className="text-gray-500 group-hover:text-white" />
       </div>
       <p className="text-sm text-gray-400 mb-6">{desc}</p>
-      <div className="flex flex-wrap gap-2 mt-auto">
-        {tags.map(t => (
+        <div className="flex flex-wrap gap-2 mt-auto">
+            {tags.map((t: string) => (
           <span key={t} className="text-[10px] font-mono text-gray-500 border border-white/5 px-2 py-1 rounded-full group-hover:border-white/20 group-hover:text-gray-300 transition-colors">
             {t}
           </span>
@@ -212,7 +251,7 @@ const ProjectCard = ({ title, desc, tags }) => (
 
 // --- PAGES ---
 
-const HomePage = ({ onNavigate }) => (
+const HomePage = ({ onNavigate }: HomePageProps) => (
   <div className="max-w-5xl mx-auto px-6 pb-20">
     {/* Hero - Full viewport height and centered */}
     <motion.div 
@@ -229,9 +268,9 @@ const HomePage = ({ onNavigate }) => (
       </div>
       
       <h1 className="text-5xl md:text-7xl font-serif font-medium text-white mb-8 leading-[1.1]">
-        I Build at the Edge of Intelligence, <br />
+        I Build at the Edge of, <br />
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-blue-400">
-          Computation, and the Emerging Internet
+          Intelligence, Computation, and the Internet
         </span>
       </h1>
 
@@ -241,7 +280,12 @@ const HomePage = ({ onNavigate }) => (
 
       <div className="flex flex-wrap gap-4">
         <button 
-          onClick={() => document.getElementById('journey').scrollIntoView({ behavior: 'smooth' })}
+          onClick={() => {
+            const element = document.getElementById('journey');
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
           className="group relative px-8 py-3 bg-white/10 backdrop-blur-md rounded-full font-medium text-white overflow-hidden transition-all hover:shadow-[0_0_20px_rgba(139,92,246,0.3)] border border-white/10 hover:border-violet-500/50"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-violet-600/50 to-blue-600/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -525,7 +569,7 @@ export default function App() {
   const [isWarping, setIsWarping] = useState(false);
   const [showContent, setShowContent] = useState(true);
 
-  const handleNavigate = (route) => {
+  const handleNavigate = (route: string) => {
     if (route === activeRoute) return;
     
     // 1. Trigger Warp
