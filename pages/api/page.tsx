@@ -1,256 +1,252 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Inter, IBM_Plex_Mono } from 'next/font/google';
 import { 
-  Terminal, Cpu, Zap, GitBranch, ArrowRight, 
-  Layers, Activity, Code2, Server, Eye 
+  ArrowUpRight, Terminal, Activity, Zap, 
+  GitCommit, Server, Cpu, CheckCircle2, AlertCircle, Clock 
 } from 'lucide-react';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 
 // --- CONFIGURATION ---
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
+const mono = IBM_Plex_Mono({ 
+  weight: ['400', '500', '600'], 
+  subsets: ['latin'], 
+  variable: '--font-mono' 
+});
 
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+// --- DATA FROM RESUME ---
+// Mapping your resume data into "Trading Assets" format
+const TICKER_ITEMS = [
+  "REACT NATIVE", "TYPESCRIPT", "YOLOV8", "AGENTIC SYSTEMS", 
+  "LEAN SIX SIGMA", "AWS", "PYTHON", "NEXT.JS", "LLM INTEGRATION"
+];
+
+const PROJECTS = [
+  {
+    id: "CP-01",
+    name: "CarePilot",
+    role: "INTERFACE ENG",
+    status: "LIVE", // Green
+    delta: "+ACTIVE",
+    metric: "24ms Latency",
+    desc: "Cross-platform architecture for clinical AI features. LLM-based scribing.",
+    stack: ["React Native", "TypeScript"]
+  },
+  {
+    id: "ZE-02",
+    name: "ZeroEyes",
+    role: "MLOPS INTERN",
+    status: "EXECUTED", // Gray/White
+    delta: "100%",
+    metric: "Auto-Pipeline",
+    desc: "YOLO-based model training infra & automated data ingestion on GPU servers.",
+    stack: ["Python", "YOLOv8"]
+  },
+  {
+    id: "KU-03",
+    name: "Univ. of Kansas",
+    role: "RESEARCH",
+    status: "CLOSED", 
+    delta: "FELLOW",
+    metric: "CV Research",
+    desc: "Undergraduate Research Fellow focusing on Computer Vision architectures.",
+    stack: ["PyTorch", "Research"]
+  }
+];
 
 // --- COMPONENTS ---
 
-const GridBackground = () => (
-  <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-[#0a0a0a]">
-    {/* 1. The Technical Grid */}
-    <div 
-      className="absolute inset-0 opacity-[0.2]" 
-      style={{
-        backgroundImage: `linear-gradient(#262626 1px, transparent 1px), linear-gradient(90deg, #262626 1px, transparent 1px)`,
-        backgroundSize: '50px 50px',
-        maskImage: 'radial-gradient(circle at center, black 40%, transparent 100%)'
-      }} 
-    />
-    
-    {/* 2. The Vector Field Glow (Animated) */}
+const Ticker = () => (
+  <div className="w-full bg-white text-black overflow-hidden py-2 border-b border-white select-none">
     <motion.div 
-      animate={{ 
-        scale: [1, 1.2, 1],
-        opacity: [0.3, 0.5, 0.3],
-      }}
-      transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[120px]" 
-    />
-    <motion.div 
-      animate={{ 
-        scale: [1, 1.1, 1],
-        opacity: [0.2, 0.4, 0.2],
-      }}
-      transition={{ duration: 10, repeat: Infinity, delay: 1, ease: "easeInOut" }}
-      className="absolute bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-violet-600/10 rounded-full blur-[100px]" 
-    />
+      animate={{ x: [0, -1000] }}
+      transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+      className="whitespace-nowrap flex gap-8 font-mono font-bold text-sm tracking-widest"
+    >
+      {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
+        <span key={i} className="flex items-center gap-4">
+          {item} <span className="text-[10px] opacity-40">//</span>
+        </span>
+      ))}
+    </motion.div>
   </div>
 );
 
-// The "Beast" Project Card
-const ProjectCard = ({ title, role, stack, stats, description, icon: Icon }: any) => {
-  const [isHovered, setIsHovered] = useState(false);
+const StatusTerminal = () => {
+  const states = [
+    { text: "TRAINING MODELS...", color: "text-amber-500", icon: Activity },
+    { text: "SCALING INFRA...", color: "text-blue-500", icon: Server },
+    { text: "DEBUGGING PIPELINES...", color: "text-red-500", icon: AlertCircle },
+    { text: "SHIPPING FEATURES...", color: "text-green-500", icon: CheckCircle2 },
+  ];
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % states.length);
+    }, 2000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const CurrentState = states[index];
+  const Icon = CurrentState.icon;
 
   return (
-    <motion.div
-      className="relative w-full h-[320px] group cursor-pointer"
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-    >
-      {/* Glass Container */}
-      <div className="absolute inset-0 bg-[#0a0a0a]/60 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden transition-all duration-500 group-hover:border-blue-500/50 group-hover:shadow-[0_0_50px_-10px_rgba(59,130,246,0.15)]">
-        
-        {/* Layer 1: The Polish (Visible Default) */}
-        <motion.div 
-          animate={{ opacity: isHovered ? 0 : 1, filter: isHovered ? "blur(10px)" : "blur(0px)" }}
-          transition={{ duration: 0.3 }}
-          className="absolute inset-0 p-8 flex flex-col justify-between z-10"
-        >
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-white/5 rounded-lg border border-white/10 text-blue-400">
-                <Icon size={20} />
-              </div>
-              <span className="text-xs font-mono text-blue-400 tracking-wider uppercase">{role}</span>
-            </div>
-            <h3 className="text-3xl font-bold text-white mb-3 font-sans tracking-tight">{title}</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">{description}</p>
-          </div>
-          
-          <div className="flex gap-2 flex-wrap">
-            {stack.map((tech: string) => (
-              <span key={tech} className="px-3 py-1.5 text-[10px] font-mono font-medium text-gray-300 bg-white/5 border border-white/10 rounded-full">
-                {tech}
-              </span>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Layer 2: The Beast (Visible on Hover) */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-          className="absolute inset-0 p-8 z-20 flex flex-col"
-        >
-          <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
-            <span className="text-xs font-mono text-gray-500">SYSTEM_METRICS</span>
-            <div className="flex gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-xs font-mono text-green-500">LIVE</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            {stats.map((stat: any, i: number) => (
-              <motion.div 
-                key={stat.label}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: isHovered ? 1 : 0, x: isHovered ? 0 : -10 }}
-                transition={{ delay: 0.1 + (i * 0.1) }}
-                className="bg-white/5 border border-white/5 p-3 rounded-lg"
-              >
-                <div className="text-[10px] text-gray-500 font-mono uppercase mb-1">{stat.label}</div>
-                <div className="text-sm text-blue-200 font-mono">{stat.value}</div>
-              </motion.div>
-            ))}
-          </div>
-          
-          <div className="mt-auto pt-4 border-t border-white/10">
-            <div className="flex justify-between items-center text-xs font-mono text-gray-400">
-              <span>View Architecture</span>
-              <ArrowRight size={14} />
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Decorative Grid Overlay inside card */}
-        <div 
-            className="absolute inset-0 opacity-[0.03] pointer-events-none z-0" 
-            style={{
-                backgroundImage: `linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)`,
-                backgroundSize: '20px 20px',
-            }} 
-        />
+    <div className="h-full flex flex-col justify-between p-6 bg-[#0a0a0a] border border-white/20">
+      <div className="flex justify-between items-start mb-4">
+        <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">System Status</span>
+        <div className="flex gap-1">
+          <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"/>
+          <div className="w-1.5 h-1.5 rounded-full bg-gray-800"/>
+        </div>
       </div>
-    </motion.div>
+      
+      <div>
+        <div className="flex items-center gap-3 mb-2">
+          <Icon size={18} className={CurrentState.color} />
+          <AnimatePresence mode="wait">
+            <motion.span 
+              key={index}
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -5 }}
+              transition={{ duration: 0.1 }} // Ultra-fast transition
+              className={`font-mono font-bold text-sm ${CurrentState.color}`}
+            >
+              {CurrentState.text}
+            </motion.span>
+          </AnimatePresence>
+        </div>
+        <div className="font-mono text-[10px] text-gray-600">
+          LAST_UPDATE: {new Date().toLocaleTimeString()}
+        </div>
+      </div>
+    </div>
   );
 };
 
+const ExecutionLog = () => (
+  <div className="border border-white/20 bg-[#0a0a0a]">
+    <div className="flex items-center justify-between p-4 border-b border-white/20 bg-white/5">
+      <h3 className="font-mono text-xs text-gray-400 uppercase tracking-widest">Execution Log (Recent)</h3>
+      <div className="text-[10px] font-mono text-gray-600">SOURCE: RESUME_V1.PDF</div>
+    </div>
+    <div className="divide-y divide-white/10">
+      {PROJECTS.map((p) => (
+        <div key={p.id} className="group flex flex-col md:flex-row md:items-center justify-between p-4 hover:bg-white/5 transition-colors duration-75 cursor-default">
+          <div className="flex items-center gap-4 mb-2 md:mb-0 w-full md:w-1/3">
+            <span className="font-mono text-[10px] text-gray-600 w-12">{p.id}</span>
+            <div>
+              <div className="font-bold text-white text-sm font-mono flex items-center gap-2">
+                {p.name}
+                <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400"/>
+              </div>
+              <div className="text-[10px] text-gray-500 uppercase">{p.role}</div>
+            </div>
+          </div>
+          
+          <div className="w-full md:w-1/3 mb-2 md:mb-0">
+            <p className="text-xs text-gray-400 font-mono line-clamp-1">{p.desc}</p>
+          </div>
+
+          <div className="w-full md:w-1/3 flex items-center justify-end gap-6">
+            <div className="text-right">
+              <div className={`text-[10px] font-bold font-mono ${
+                p.status === 'LIVE' ? 'text-green-500' : 'text-white'
+              }`}>{p.status}</div>
+              <div className="text-[10px] text-gray-600">{p.metric}</div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
 export default function Home() {
   return (
-    <main className={`min-h-screen bg-[#0a0a0a] text-white selection:bg-blue-500/30 ${inter.variable} ${mono.variable} font-sans overflow-x-hidden`}>
-      <GridBackground />
+    <main className={`min-h-screen bg-black text-white ${inter.variable} ${mono.variable} font-sans selection:bg-white selection:text-black`}>
       
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-20">
+      {/* 1. TOP TICKER */}
+      <Ticker />
+
+      <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8">
         
-        {/* --- HERO SECTION --- */}
-        <div className="max-w-4xl">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex items-center gap-3 mb-8"
-          >
-            <div className="h-px w-8 bg-blue-500" />
-            <span className="font-mono text-blue-400 tracking-widest text-sm uppercase">
-              Engineer. Builder. System Designer.
-            </span>
-          </motion.div>
-
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-6xl md:text-8xl font-bold tracking-tighter text-white mb-8 leading-[0.9]"
-          >
-            I Build Intelligence <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-violet-500">
-              Into Interfaces.
-            </span>
-          </motion.h1>
-
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-xl text-gray-400 max-w-2xl leading-relaxed mb-12"
-          >
-            From MLOps pipelines to cross-platform architectures—I'm a startup-hungry, 
-            technical beast who turns raw data into polished experiences.
-          </motion.p>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-wrap gap-4"
-          >
-            <button className="group relative px-8 py-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full overflow-hidden transition-all hover:bg-white/10">
-              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-              <span className="relative font-mono font-medium text-white flex items-center gap-2">
-                View Work <ArrowRight size={16} />
-              </span>
-            </button>
-            <button className="px-8 py-4 rounded-full border border-white/10 font-mono text-gray-400 hover:text-white hover:border-white/30 transition-colors">
-              Contact Me
-            </button>
-          </motion.div>
-        </div>
-
-        {/* --- PROJECTS / BEAST CARDS --- */}
-        <div className="mt-32 grid md:grid-cols-2 gap-8">
-            
-            {/* Card 1: CarePilot (Based on Resume [cite: 16, 22, 25]) */}
-            <ProjectCard 
-              title="CarePilot"
-              role="Interface Design Engineer"
-              description="Engineered cross-platform architecture for clinical AI features. Integrated LLM-based scribing and diagnosis generation."
-              icon={Activity}
-              stack={['React Native', 'TypeScript', 'Node.js', 'LLMs']}
-              stats={[
-                { label: 'Latency', value: '24ms' },
-                { label: 'Platform', value: 'Web + Mobile' },
-                { label: 'AI Model', value: 'LLM Scribing' },
-                { label: 'Components', value: '50+ Reusable' },
-              ]}
-            />
-
-            {/* Card 2: ZeroEyes (Based on Resume [cite: 27, 28, 30]) */}
-            <ProjectCard 
-              title="ZeroEyes"
-              role="MLOps Intern"
-              description="Built YOLO-based model training infrastructure and automated data ingestion pipelines for GPU servers."
-              icon={Eye}
-              stack={['Python', 'YOLOv8', 'Bash', 'Linux']}
-              stats={[
-                { label: 'Pipeline', value: 'Automated' },
-                { label: 'Data', value: 'Video Ingestion' },
-                { label: 'Infra', value: 'GPU Cluster' },
-                { label: 'Optimization', value: 'Scripted' },
-              ]}
-            />
-        </div>
-
-        {/* --- MARQUEE --- */}
-        <div className="mt-32 pt-10 border-t border-white/5">
-            <div className="flex justify-between items-center opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
-                {/* Placeholder logos - replace with SVGs */}
-                <span className="text-xl font-bold font-mono">REACT</span>
-                <span className="text-xl font-bold font-mono">TYPESCRIPT</span>
-                <span className="text-xl font-bold font-mono">PYTHON</span>
-                <span className="text-xl font-bold font-mono">PYTORCH</span>
-                <span className="text-xl font-bold font-mono">NEXT.JS</span>
+        {/* 2. BENTO GRID HERO */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4">
+          
+          {/* Main Headline Block */}
+          <div className="col-span-1 md:col-span-8 border border-white/20 bg-[#050505] p-8 md:p-12 flex flex-col justify-between min-h-[400px]">
+            <div>
+              <div className="inline-block px-2 py-1 mb-6 border border-green-900 bg-green-900/10">
+                <span className="text-[10px] font-mono text-green-500 tracking-widest uppercase">
+                  ● Velocity Is a Feature
+                </span>
+              </div>
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tighter leading-[0.9] mb-6 text-white">
+                I BUILD SYSTEMS <br/>
+                THAT MOVE AT <br/>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-600">
+                  STARTUP SPEED.
+                </span>
+              </h1>
             </div>
+            
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+              <p className="max-w-md text-gray-400 font-mono text-sm leading-relaxed">
+                Full-stack engineer obsessed with efficiency, throughput, and high-leverage automation. 
+                Currently engineering interfaces at CarePilot.
+              </p>
+              
+              <div className="flex gap-4">
+                 <button className="group px-6 py-3 bg-white text-black font-mono text-xs font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors flex items-center gap-2">
+                    Start Dialogue
+                    <ArrowUpRight size={14} />
+                 </button>
+                 <button className="px-6 py-3 border border-white/20 text-white font-mono text-xs font-bold uppercase tracking-wider hover:border-white transition-colors">
+                    View Docs
+                 </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Status & Metrics */}
+          <div className="col-span-1 md:col-span-4 flex flex-col gap-4">
+            
+            {/* Status Terminal */}
+            <div className="flex-1">
+              <StatusTerminal />
+            </div>
+
+            {/* Metrics Block */}
+            <div className="h-1/3 bg-[#0a0a0a] border border-white/20 p-6 flex flex-col justify-center">
+               <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <div className="text-[10px] text-gray-500 font-mono uppercase mb-1">Architecture</div>
+                    <div className="text-xl font-bold font-mono">Mobile + Web</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] text-gray-500 font-mono uppercase mb-1">Est. 2021</div>
+                    <div className="text-xl font-bold font-mono">BS CompSci</div>
+                  </div>
+               </div>
+            </div>
+          </div>
         </div>
+
+        {/* 3. EXECUTION LOG (Projects) */}
+        <ExecutionLog />
+        
+        {/* 4. FOOTER GRID LINES */}
+        <div className="mt-4 grid grid-cols-4 border-t border-white/20 pt-4 opacity-50">
+            <div className="font-mono text-[10px] text-gray-600">KANSAS CITY, MO</div>
+            <div className="font-mono text-[10px] text-gray-600 text-center">LOCAL TIME: {new Date().toLocaleTimeString()}</div>
+            <div className="font-mono text-[10px] text-gray-600 text-center">LAT: 39.0997° N</div>
+            <div className="font-mono text-[10px] text-gray-600 text-right">SYSTEM_READY</div>
+        </div>
+
       </div>
     </main>
   );
