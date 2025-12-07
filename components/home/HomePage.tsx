@@ -10,8 +10,6 @@ const timelineData = [
     year: '2025 - Present',
     title: 'Interface Design Engineer',
     company: 'CarePilot',
-    // SUBTLE CHANGE: Focuses on the "value" you provide, not just "learning".
-    // Shows you are reliable and product-focused.
     description: 'Lead frontend engineer for clinical AI features. Responsible for the reliability and architecture of the mobile application, ensuring that LLM-driven tools are performant, tested, and intuitive for providers.',
     stack: ['React Native', 'TypeScript', 'Automated Testing', 'CI/CD', 'Product Engineering'],
     delay: 0.1,
@@ -20,7 +18,6 @@ const timelineData = [
     year: '2024',
     title: 'MLOps Intern',
     company: 'ZeroEyes',
-    // KEEPS THE DEPTH: Shows you know the backend/AI side without making it your "current" identity.
     description: 'Built the infrastructure for model training and data ingestion. Developed internal tooling that standardized how machine learning models moved from development to production.',
     stack: ['Python', 'YOLOv8', 'Bash', 'Linux', 'Infrastructure'],
     delay: 0.2,
@@ -82,7 +79,6 @@ export const HomePage = ({ onNavigate }: HomePageProps) => (
       <div className="flex flex-wrap gap-4">
         <Button 
           showArrow
-          arrowDirection="down"
           onClick={() => {
             const element = document.getElementById('journey');
             if (element) {

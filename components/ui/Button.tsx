@@ -1,18 +1,16 @@
 import { ReactNode, ButtonHTMLAttributes } from 'react';
-import { ArrowRight, ArrowDown } from 'lucide-react';
+import { ArrowDown } from 'lucide-react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   variant?: 'primary' | 'secondary';
   showArrow?: boolean;
-  arrowDirection?: 'right' | 'down';
 }
 
 export const Button = ({ 
   children, 
   variant = 'primary', 
   showArrow = false,
-  arrowDirection = 'right',
   className = '',
   ...props 
 }: ButtonProps) => {
@@ -34,11 +32,7 @@ export const Button = ({
       <span className="relative flex items-center gap-2">
         {children}
         {showArrow && (
-          arrowDirection === 'down' ? (
-            <ArrowDown size={16} className="group-hover:translate-y-1 transition-transform" />
-          ) : (
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-          )
+          <ArrowDown size={16} />
         )}
       </span>
     </button>

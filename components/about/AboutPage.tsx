@@ -30,7 +30,7 @@ export const AboutPage = () => (
           
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-white mb-1">Drew Meyer</h2>
-            <p className="text-violet-400 font-mono text-xs">Engineer · Builder · Neural Architect</p>
+            <p className="text-violet-400 font-mono text-xs">Engineer · Builder · Web Designer</p>
           </div>
 
           <div className="space-y-4 py-6 border-t border-white/10">
