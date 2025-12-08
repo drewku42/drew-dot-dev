@@ -61,9 +61,13 @@ export const AboutPage = () => (
             </a>
           </div>
 
-          <button className="w-full py-2 mt-4 bg-white/10 hover:bg-white/20 rounded-lg text-white font-medium text-sm transition-colors border border-white/10">
+          <a 
+            href="/DrewMeyerResume.pdf"
+            download
+            className="w-full py-2 mt-4 bg-white/10 hover:bg-white/20 rounded-lg text-white font-medium text-sm transition-colors border border-white/10 flex items-center justify-center"
+          >
             Download Resume
-          </button>
+          </a>
         </motion.div>
       </div>
 
@@ -76,9 +80,9 @@ export const AboutPage = () => (
           <h2 className="text-3xl font-serif text-white mb-6">About Me</h2>
           <div className="prose prose-invert text-gray-400 leading-relaxed">
             <p className="mb-4">
-              I operate at the intersection of <strong>Machine Learning</strong> and <strong>Product Engineering</strong>. 
-              While many engineers specialize in one or the other, I thrive in the gap between them—taking raw model outputs 
-              and architecting the full-stack systems required to make them useful in the real world.
+              I operate at the intersection of <strong>Artificial Intelligence</strong> and <strong>Product Engineering</strong>. 
+              While many engineers specialize in one or the other, I thrive in the gap between them, by minimizing the friction between
+              
             </p>
             <p>
               Currently, I'm at <strong>CarePilot</strong>, building AI-driven clinical interfaces that help doctors spend less time 

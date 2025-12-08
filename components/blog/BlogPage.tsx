@@ -56,8 +56,8 @@ export const BlogPage = () => {
             <BookOpen size={48} className="mx-auto mb-6 text-gray-500" />
             <h2 className="text-2xl font-bold text-white mb-3">Coming Soon</h2>
             <p className="text-gray-400">
-              I'm working on some exciting content about systems, intelligence, and software craftsmanship. 
-              Check back soon!
+              I'm working on some exciting content about new developments in tech. Ranging from AI and software to blockchian and cryptocurrency.
+              <br />Check back soon!
             </p>
           </div>
         </motion.div>
