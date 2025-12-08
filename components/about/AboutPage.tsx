@@ -2,9 +2,37 @@ import { motion } from 'framer-motion';
 import { User, MapPin, Mail, Github, Linkedin, Cpu, Zap } from 'lucide-react';
 import Image from 'next/image';
 
-const languages = ['TypeScript', 'Python', 'C++', 'SQL', 'Bash'];
-const coreStack = ['React Native', 'Next.js', 'PyTorch', 'YOLOv8', 'Postgres'];
-const exploring = ['Agentic Design Patterns', 'Local LLM Inference', 'Rust for Tooling', 'WebGL Shaders'];
+const languages = [
+  'TypeScript',
+  'Python',
+  'C++',
+  'SQL',
+  'Bash'
+
+];
+
+const coreStack = [
+  'React',
+  'JavaScript',
+  'TypeScript',
+  'CSS/SCSS',
+  'NextJS',
+  //'Tailwind',
+  // 'Node.js',
+  // 'Express',
+  // 'MongoDB',
+  // 'PostgreSQL',
+  // 'MySQL',
+  // 'Python',
+
+];
+
+const exploring = [
+  'Agentic Systems',
+  'AI-powered Tooling',
+  'Blockchain',
+  'Cryptocurrency'
+];
 
 export const AboutPage = () => (
   <div className="max-w-5xl mx-auto px-6 pt-32 pb-20">
