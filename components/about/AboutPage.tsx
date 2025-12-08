@@ -108,14 +108,18 @@ export const AboutPage = () => (
           <h2 className="text-3xl font-serif text-white mb-6">About Me</h2>
           <div className="prose prose-invert text-gray-400 leading-relaxed">
             <p className="mb-4">
-              I operate at the intersection of <strong>Artificial Intelligence</strong> and <strong>Product Engineering</strong>. 
-              While many engineers specialize in one or the other, I thrive in the gap between them, by minimizing the friction between
-              
+                My relationship with technology began around age 13, when I built my first personal computer. What started as a simple desire to play my favorite video games quickly turned
+                into an obsession with hardware architecture, performance optimization, and the art of budgeting. That early experience of turning individual components into a cohesive,
+                high-performance machine led me to study computer science at the University of Kansas.
             </p>
-            <p>
-              Currently, I'm at <strong>CarePilot</strong>, building AI-driven clinical interfaces that help doctors spend less time 
-              typing and more time caring. Before that, I was deep in the trenches of MLOps at <strong>ZeroEyes</strong>, managing 
-              GPU clusters and training pipelines for computer vision models.
+            <p className="mb-4">
+              The defining moment of my career happened during my sophomore year when I first used ChatGPT. It was a genuine "holy sh*t" moment. I realized that the barrier between having an
+              idea and building a product had collapsed. Since then, I have been enamored by the speed of creation. I view software engineering not just as a technical trade, but as a highly
+              creative process, and I am incredibly grateful to be building during this technological renaissance.
+            </p>
+            <p className="mb-4">
+              Today, that same curiosity drives me to look beyond the immediate horizon. I am constantly exploring emerging technologies 
+              like quantum computing,blockchain and cryptocurrency, looking for the next generation of tools that will reshape how we interact with the digital world.
             </p>
           </div>
         </motion.section>
