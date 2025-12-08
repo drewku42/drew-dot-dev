@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
-import { Activity, MapPin } from 'lucide-react';
+import { Activity, MapPin, Rocket, ArrowDown } from 'lucide-react';
 import { HomePageProps } from '@/types';
 import { TimelineItem } from './TimelineItem';
 import { ProjectCard } from './ProjectCard';
 import { Button } from '@/components/ui/Button';
+import { ROUTES } from '@/constants';
 
 const timelineData = [
   {
@@ -32,27 +33,28 @@ const timelineData = [
   },
 ];
 
-const projectsData = [
-  {
-    title: 'Clinical Agent Swarm',
-    desc: 'A multi-agent system designed to handle patient intake and preliminary diagnosis generation.',
-    tags: ['LangChain', 'Python', 'React'],
-  },
-  {
-    title: 'Vision Pipeline CLI',
-    desc: 'Command line interface for standardizing video frame extraction and annotation formatting.',
-    tags: ['Rust', 'FFmpeg', 'CLI'],
-  },
-  {
-    title: 'Personal OS',
-    desc: 'A unified dashboard for tracking health, finance, and learning metrics in real-time.',
-    tags: ['Next.js', 'Postgres', 'Tailwind'],
-  },
-];
+// const projectsData = [
+//   {
+//     title: 'Clinical Agent Swarm',
+//     desc: 'A multi-agent system designed to handle patient intake and preliminary diagnosis generation.',
+//     tags: ['LangChain', 'Python', 'React'],
+//   },
+//   {
+//     title: 'Vision Pipeline CLI',
+//     desc: 'Command line interface for standardizing video frame extraction and annotation formatting.',
+//     tags: ['Rust', 'FFmpeg', 'CLI'],
+//   },
+//   {
+//     title: 'Personal OS',
+//     desc: 'A unified dashboard for tracking health, finance, and learning metrics in real-time.',
+//     tags: ['Next.js', 'Postgres', 'Tailwind'],
+//   },
+// ];
 
 export const HomePage = ({ onNavigate }: HomePageProps) => (
   <div className="max-w-5xl mx-auto px-6 pb-20">
     <motion.div 
+      id="hero"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
@@ -78,11 +80,17 @@ export const HomePage = ({ onNavigate }: HomePageProps) => (
 
       <div className="flex flex-wrap gap-4">
         <Button 
-          showArrow
+          icon={ArrowDown}
           onClick={() => {
-            const element = document.getElementById('journey');
-            if (element) {
-              element.scrollIntoView({ behavior: 'smooth' });
+            const heroElement = document.getElementById('hero');
+            if (heroElement) {
+              const heroRect = heroElement.getBoundingClientRect();
+              const heroBottom = heroRect.bottom + window.pageYOffset;
+              
+              window.scrollTo({
+                top: heroBottom,
+                behavior: 'smooth'
+              });
             }
           }}
         >
@@ -98,7 +106,7 @@ export const HomePage = ({ onNavigate }: HomePageProps) => (
           <p className="text-gray-400 text-sm mb-8">
             My professional path and technical background.
           </p>
-          <div className="p-4 bg-[#0a0f1e] border border-white/10 rounded-xl">
+          <div className="p-4 bg-[#0a0f1e] border border-white/10 rounded-xl mb-8">
             <div className="flex items-center gap-2 mb-3">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
               <span className="text-xs font-mono text-gray-400 uppercase">Current Role</span>
@@ -114,6 +122,12 @@ export const HomePage = ({ onNavigate }: HomePageProps) => (
               </div>
             </div>
           </div>
+          <Button 
+            icon={Rocket}
+            onClick={() => onNavigate(ROUTES.about)}
+          >
+            About Drew
+          </Button>
         </div>
       </div>
       
@@ -124,13 +138,13 @@ export const HomePage = ({ onNavigate }: HomePageProps) => (
       </div>
     </div>
 
-    <div className="py-20 border-t border-white/5">
+    {/* <div className="py-20 border-t border-white/5">
       <h2 className="text-3xl font-serif text-white mb-10">Selected Projects</h2>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {projectsData.map((project, index) => (
           <ProjectCard key={index} {...project} />
         ))}
       </div>
-    </div>
+    </div> */}
   </div>
 );

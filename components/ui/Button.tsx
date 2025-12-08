@@ -1,16 +1,16 @@
 import { ReactNode, ButtonHTMLAttributes } from 'react';
-import { ArrowDown } from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   variant?: 'primary' | 'secondary';
-  showArrow?: boolean;
+  icon?: LucideIcon;
 }
 
 export const Button = ({ 
   children, 
   variant = 'primary', 
-  showArrow = false,
+  icon: Icon,
   className = '',
   ...props 
 }: ButtonProps) => {
@@ -31,9 +31,7 @@ export const Button = ({
       )}
       <span className="relative flex items-center gap-2">
         {children}
-        {showArrow && (
-          <ArrowDown size={16} />
-        )}
+        {Icon && <Icon size={16} />}
       </span>
     </button>
   );
