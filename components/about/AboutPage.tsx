@@ -108,7 +108,7 @@ export const AboutPage = () => (
           <h2 className="text-3xl font-serif text-white mb-6">About Me</h2>
           <div className="prose prose-invert text-gray-400 leading-relaxed">
             <p className="mb-4">
-                My relationship with technology began around age 13, when I built my first personal computer. What started as a simple desire to play my favorite video games quickly turned
+                My journey with technology began around age 13, when I built my first personal computer. What started as a simple desire to play my favorite video games quickly turned
                 into an obsession with hardware architecture, performance optimization, and the art of budgeting. That early experience of turning individual components into a cohesive,
                 high-performance machine led me to study computer science at the University of Kansas.
             </p>
